@@ -315,20 +315,23 @@ public class Course
 	 */
 	private void loadFiles(ServletContext context, String path)
 	{
+        //Add null check on getResourcePath() return
 		Set resourcePaths = context.getResourcePaths(path);
-		Iterator itr = resourcePaths.iterator();
-
-		while (itr.hasNext())
-		{
-			String file = (String) itr.next();
-
-			if (file.length() != 1 && file.endsWith("/"))
+		Iterator itr;
+		if(resourcePaths != null) {
+			itr = resourcePaths.iterator();
+			while (itr.hasNext())
 			{
-				loadFiles(context, file);
-			}
-			else
-			{
-				files.add(file);
+				String file = (String) itr.next();
+
+				if (file.length() != 1 && file.endsWith("/"))
+				{
+					loadFiles(context, file);
+				}
+				else
+				{
+					files.add(file);
+				}
 			}
 		}
 	}
