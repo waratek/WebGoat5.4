@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.catalina.Role;
-import org.apache.catalina.User;
-import org.apache.catalina.users.MemoryUserDatabase;
 
 
 /***************************************************************************************************
@@ -50,8 +47,7 @@ public class UserTracker
 	// FIXME: persist this somehow!
 
 	private static HashMap<String, HashMap<String, LessonTracker>> storage = new HashMap<String, HashMap<String, LessonTracker>>();
-
-	private static MemoryUserDatabase usersDB = new MemoryUserDatabase();
+	
 
 	/**
 	 * Constructor for the UserTracker object
@@ -105,58 +101,13 @@ public class UserTracker
 
 	public Collection<String> getAllUsers(String roleName)
 	{
-		synchronized (usersDB)
-		{
-			Collection<String> allUsers = new ArrayList<String>();
-			try
-			{
-				usersDB.open();
-				Iterator users = usersDB.getUsers();
-				while (users.hasNext())
-				{
-					User user = (User) users.next();
-					Iterator roles = user.getRoles();
-					while (roles.hasNext())
-					{
-						Role role = (Role) roles.next();
-						if (role.getRolename().trim().equals(roleName))
-						{
-							allUsers.add(user.getUsername());
-						}
-					}
-				}
-				usersDB.close();
-			} catch (Exception e)
-			{
-			}
-			return allUsers;
-		}
+        //Removed call to catalina MemoryUserDatabase which prevents application server portability.
+        return new ArrayList<String>();
 	}
 
 	public void deleteUser(String user)
 	{
-		synchronized (usersDB)
-		{
-			try
-			{
-				usersDB.open();
-				Iterator users = usersDB.getUsers();
-				while (users.hasNext())
-				{
-					User tomcatUser = (User) users.next();
-					if (tomcatUser.getUsername().equals(user))
-					{
-						usersDB.removeUser(tomcatUser);
-						// FIXME: delete all the lesson tracking property files
-						break;
-					}
-				}
-				usersDB.close();
-
-			} catch (Exception e)
-			{
-			}
-		}
+        //Removed call to catalina MemoryUserDatabase which prevents application server portability.
 	}
 
 	/**
